@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Administración Residencial</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <h1>Administración Residencial</h1>
+
+  <!-- Apartamentos -->
+  <section id="apartamentos-section">
+    <h2>Apartamentos</h2>
+    <form id="apartamento-form">
+      <input type="text" id="numero-apto" placeholder="Número" required />
+      <input type="text" id="torre-apto" placeholder="Torre" required />
+      <input type="text" id="residentes-apto" placeholder="Residentes (separados por coma)" required />
+      <button type="submit">Guardar Apartamento</button>
+    </form>
+    <table id="apartamentos-tabla">
+      <thead>
+        <tr>
+          <th>Número</th>
+          <th>Torre</th>
+          <th>Residentes</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- Parqueaderos -->
+  <section id="parqueaderos-section">
+    <h2>Parqueaderos</h2>
+    <form id="parqueadero-form">
+      <input type="text" id="tipo-parqueadero" placeholder="Tipo (carro/moto)" required />
+      <input type="text" id="placa-parqueadero" placeholder="Placa" required />
+      <input type="datetime-local" id="fecha-hora-parqueadero" required />
+      <select id="estado-parqueadero">
+        <option value="ocupado">Ocupado</option>
+        <option value="desocupado">Desocupado</option>
+      </select>
+      <button type="submit">Agregar Parqueadero</button>
+    </form>
+    <table id="parqueaderos-tabla">
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Placa</th>
+          <th>Fecha y Hora</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- Pagos -->
+  <section id="pagos-section">
+    <h2>Pagos</h2>
+    <form id="pago-form">
+      <input type="text" id="apto-pago" placeholder="Apto" required />
+      <input type="number" id="valor-pago" placeholder="Valor" required />
+      <input type="date" id="fecha-pago" required />
+      <select id="estado-pago">
+        <option value="adelantado">Adelantado</option>
+        <option value="retrasado">Retrasado</option>
+      </select>
+      <button type="submit">Agregar Pago</button>
+    </form>
+    <table id="pagos-tabla">
+      <thead>
+        <tr>
+          <th>Apartamento</th>
+          <th>Valor</th>
+          <th>Fecha</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- Sanciones -->
+  <section id="sanciones-section">
+    <h2>Sanciones</h2>
+    <form id="sancion-form">
+      <input type="text" id="apto-sancion" placeholder="Apto" required />
+      <input type="text" id="motivo-sancion" placeholder="Motivo" required />
+      <input type="number" id="valor-sancion" placeholder="Valor" required />
+      <input type="date" id="fecha-sancion" required />
+      <button type="submit">Agregar Sanción</button>
+    </form>
+    <table id="sanciones-tabla">
+      <thead>
+        <tr>
+          <th>Apartamento</th>
+          <th>Motivo</th>
+          <th>Valor</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- Eventos Sociales -->
+  <section id="eventos-section">
+    <h2>Eventos Sociales</h2>
+    <form id="evento-form">
+      <input type="text" id="nombre-evento" placeholder="Nombre del Evento" required />
+      <input type="date" id="fecha-evento" required />
+      <input type="text" id="hora-evento" placeholder="Hora" required />
+      <input type="text" id="lugar-evento" placeholder="Lugar" required />
+      <button type="submit">Agregar Evento</button>
+    </form>
+    <table id="eventos-tabla">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Lugar</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- Mensajes -->
+  <section id="mensajes-section">
+    <h2>Mensajes</h2>
+    <form id="mensaje-form">
+      <input type="text" id="de-mensaje" placeholder="De" required />
+      <input type="text" id="para-mensaje" placeholder="Para" required />
+      <input type="text" id="contenido-mensaje" placeholder="Contenido" required />
+      <input type="date" id="fecha-mensaje" required />
+      <button type="submit">Enviar Mensaje</button>
+    </form>
+    <table id="mensajes-tabla">
+      <thead>
+        <tr>
+          <th>De</th>
+          <th>Para</th>
+          <th>Contenido</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- Reportes -->
+  <section id="reportes-section">
+    <h2>Reportes de Mantenimiento</h2>
+    <form id="reporte-form">
+      <input type="text" id="apartamento-reporte" placeholder="Apto" required />
+      <input type="text" id="descripcion-reporte" placeholder="Descripción" required />
+      <input type="date" id="fecha-reporte" required />
+      <button type="submit">Agregar Reporte</button>
+    </form>
+    <table id="reportes-tabla">
+      <thead>
+        <tr>
+          <th>Apartamento</th>
+          <th>Descripción</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
