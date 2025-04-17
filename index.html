@@ -10,26 +10,77 @@
   <h1>Administración Residencial</h1>
 
   <!-- Apartamentos -->
-  <section id="apartamentos-section">
-    <h2>Apartamentos</h2>
+  <h1>Formulario de Registro de Apartamento</h1>
+  <div class="form-container">
     <form id="apartamento-form">
-      <input type="text" id="numero-apto" placeholder="Número" required />
-      <input type="text" id="torre-apto" placeholder="Torre" required />
-      <input type="text" id="residentes-apto" placeholder="Residentes (separados por coma)" required />
-      <button type="submit">Guardar Apartamento</button>
+      <div class="form-group">
+        <label for="numero">Número de Apartamento:</label>
+        <input type="text" id="numero" name="numero" required>
+      </div>
+
+      <div class="form-group">
+        <label for="piso">Piso:</label>
+        <input type="text" id="piso" name="piso" required>
+      </div>
+
+      <div class="form-group">
+        <label for="propietario-nombre">Nombre del Propietario:</label>
+        <input type="text" id="propietario-nombre" name="propietario-nombre" required>
+      </div>
+
+      <div class="form-group">
+        <label for="propietario-tipoDocumento">Tipo de Documento del Propietario:</label>
+        <input type="text" id="propietario-tipoDocumento" name="propietario-tipoDocumento" required>
+      </div>
+
+      <div class="form-group">
+        <label for="propietario-documento">Documento del Propietario:</label>
+        <input type="text" id="propietario-documento" name="propietario-documento" required>
+      </div>
+
+      <div class="form-group">
+        <label for="propietario-telefono">Teléfono del Propietario:</label>
+        <input type="text" id="propietario-telefono" name="propietario-telefono" required>
+      </div>
+
+      <div class="resident-group">
+        <h3>Residentes</h3>
+        <div id="residentes-container">
+          <div class="resident-form">
+            <label for="residente-nombre">Nombre del Residente:</label>
+            <input type="text" name="residente-nombre[]" required>
+            <label for="residente-tipoDocumento">Tipo de Documento:</label>
+            <input type="text" name="residente-tipoDocumento[]" required>
+            <label for="residente-documento">Documento:</label>
+            <input type="text" name="residente-documento[]" required>
+            <label for="residente-telefono">Teléfono:</label>
+            <input type="text" name="residente-telefono[]" required>
+          </div>
+        </div>
+        <button type="button" id="add-residente">Agregar Residente</button>
+      </div>
+
+      <button type="submit">Registrar Apartamento</button>
     </form>
-    <table id="apartamentos-tabla">
+  </div>
+
+  <!--Mostrar apartamentos en una tabla-->
+  <section>
+    <h2>Lista de Apartamentos</h2>
+    <table id="tablaApartamentos" border="1">
       <thead>
         <tr>
           <th>Número</th>
-          <th>Torre</th>
+          <th>Piso</th>
+          <th>Propietario</th>
           <th>Residentes</th>
-          <th>Acciones</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
   </section>
+  
+
 
   <!-- Parqueaderos -->
   <section id="parqueaderos-section">
@@ -178,5 +229,6 @@
   </section>
 
   <script type="module" src="js/main.js"></script>
+  <script src="js/apartamentos.js"></script>
 </body>
 </html>
