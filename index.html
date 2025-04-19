@@ -4,57 +4,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Administración Residencial</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <h1>Administración Residencial</h1>
 
   <!-- Apartamentos -->
-  <h1>Formulario de Registro de Apartamento</h1>
-  <div class="form-container">
-    <form id="apartamento-form">
-      <div class="form-group">
-        <label for="numero">Número de Apartamento:</label>
-        <input type="text" id="numero" name="numero" required>
-      </div>
-
-      <div class="form-group">
-        <label for="piso">Piso:</label>
-        <input type="text" id="piso" name="piso" required>
-      </div>
-
-      <div class="form-group">
-        <label for="propietario-nombre">Nombre del Propietario:</label>
-        <input type="text" id="propietario-nombre" name="propietario-nombre" required>
-      </div>
-
-      <div class="form-group">
-        <label for="propietario-tipoDocumento">Tipo de Documento del Propietario:</label>
-        <input type="text" id="propietario-tipoDocumento" name="propietario-tipoDocumento" required>
-      </div>
-
-      <div class="form-group">
-        <label for="propietario-documento">Documento del Propietario:</label>
-        <input type="text" id="propietario-documento" name="propietario-documento" required>
-      </div>
-
-      <div class="form-group">
-        <label for="propietario-telefono">Teléfono del Propietario:</label>
-        <input type="text" id="propietario-telefono" name="propietario-telefono" required>
-      </div>
+  <section>
+    <h2>Registro de Apartamento</h2>
+    <form id="apartamento-form" class="form-container">
+      <div class="form-group"><label for="numero">Número:</label><input type="text" id="numero" required></div>
+      <div class="form-group"><label for="piso">Piso:</label><input type="text" id="piso" required></div>
+      <div class="form-group"><label for="propietario-nombre">Propietario:</label><input type="text" id="propietario-nombre" required></div>
+      <div class="form-group"><label for="propietario-tipoDocumento">Tipo Doc:</label><input type="text" id="propietario-tipoDocumento" required></div>
+      <div class="form-group"><label for="propietario-documento">Documento:</label><input type="text" id="propietario-documento" required></div>
+      <div class="form-group"><label for="propietario-telefono">Teléfono:</label><input type="text" id="propietario-telefono" required></div>
 
       <div class="resident-group">
         <h3>Residentes</h3>
         <div id="residentes-container">
           <div class="resident-form">
-            <label for="residente-nombre">Nombre del Residente:</label>
-            <input type="text" name="residente-nombre[]" required>
-            <label for="residente-tipoDocumento">Tipo de Documento:</label>
-            <input type="text" name="residente-tipoDocumento[]" required>
-            <label for="residente-documento">Documento:</label>
-            <input type="text" name="residente-documento[]" required>
-            <label for="residente-telefono">Teléfono:</label>
-            <input type="text" name="residente-telefono[]" required>
+            <label>Nombre:</label><input type="text" name="residente-nombre[]" required>
+            <label>Tipo Doc:</label><input type="text" name="residente-tipoDocumento[]" required>
+            <label>Documento:</label><input type="text" name="residente-documento[]" required>
+            <label>Teléfono:</label><input type="text" name="residente-telefono[]" required>
           </div>
         </div>
         <button type="button" id="add-residente">Agregar Residente</button>
@@ -62,9 +36,9 @@
 
       <button type="submit">Registrar Apartamento</button>
     </form>
-  </div>
+  </section>
 
-  <!--Mostrar apartamentos en una tabla-->
+  <!-- Tabla Apartamentos -->
   <section>
     <h2>Lista de Apartamentos</h2>
     <table id="tablaApartamentos" border="1">
@@ -74,13 +48,39 @@
           <th>Piso</th>
           <th>Propietario</th>
           <th>Residentes</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
   </section>
-  
 
+  <!-- Pagos -->
+  <section id="pagos-section">
+    <h2>Pagos</h2>
+    <form id="pago-form">
+      <input type="text" id="apto-pago" placeholder="Apto" required />
+      <input type="number" id="monto" placeholder="Monto" required />
+      <input type="date" id="fecha-pago" required />
+      <select id="estado-pago">
+        <option value="adelantado">Adelantado</option>
+        <option value="retrasado">Retrasado</option>
+      </select>
+      <button type="submit">Agregar Pago</button>
+    </form>
+    <table id="pagos-tabla">
+      <thead>
+        <tr>
+          <th>Apartamento</th>
+          <th>Monto</th>
+          <th>Fecha</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
 
   <!-- Parqueaderos -->
   <section id="parqueaderos-section">
@@ -109,23 +109,48 @@
     </table>
   </section>
 
-  <!-- Pagos -->
-  <section id="pagos-section">
-    <h2>Pagos</h2>
-    <form id="pago-form">
-      <input type="text" id="apto-pago" placeholder="Apto" required />
-      <input type="number" id="valor-pago" placeholder="Valor" required />
-      <input type="date" id="fecha-pago" required />
-      <select id="estado-pago">
-        <option value="adelantado">Adelantado</option>
-        <option value="retrasado">Retrasado</option>
-      </select>
-      <button type="submit">Agregar Pago</button>
+  <!-- Sanciones -->
+  <section id="sanciones">
+    <h2>Gestión de Sanciones</h2>
+  
+    <form id="sancion-form">
+      <div>
+        <label for="apartamento-sancion">Apartamento (ID):</label>
+        <input type="text" id="apartamento-sancion" required />
+      </div>
+  
+      <div>
+        <label for="motivo-sancion">Motivo:</label>
+        <input type="text" id="motivo-sancion" required />
+      </div>
+  
+      <div>
+        <label for="valor-sancion">Valor:</label>
+        <input type="number" id="valor-sancion" required />
+      </div>
+  
+      <div>
+        <label for="fecha-sancion">Fecha:</label>
+        <input type="date" id="fecha-sancion" required />
+      </div>
+  
+      <div>
+        <label for="estado-sancion">Estado:</label>
+        <select id="estado-sancion">
+          <option value="pendiente">Pendiente</option>
+          <option value="pagada">Pagada</option>
+        </select>
+      </div>
+  
+      <button type="submit">Guardar Sanción</button>
     </form>
-    <table id="pagos-tabla">
+  
+    <h3>Lista de Sanciones</h3>
+    <table id="sanciones-tabla">
       <thead>
         <tr>
           <th>Apartamento</th>
+          <th>Motivo</th>
           <th>Valor</th>
           <th>Fecha</th>
           <th>Estado</th>
@@ -135,41 +160,30 @@
       <tbody></tbody>
     </table>
   </section>
-
-  <!-- Sanciones -->
-  <section id="sanciones-section">
-    <h2>Sanciones</h2>
-    <form id="sancion-form">
-      <input type="text" id="apto-sancion" placeholder="Apto" required />
-      <input type="text" id="motivo-sancion" placeholder="Motivo" required />
-      <input type="number" id="valor-sancion" placeholder="Valor" required />
-      <input type="date" id="fecha-sancion" required />
-      <button type="submit">Agregar Sanción</button>
-    </form>
-    <table id="sanciones-tabla">
-      <thead>
-        <tr>
-          <th>Apartamento</th>
-          <th>Motivo</th>
-          <th>Valor</th>
-          <th>Fecha</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
+  
 
   <!-- Eventos Sociales -->
   <section id="eventos-section">
     <h2>Eventos Sociales</h2>
     <form id="evento-form">
-      <input type="text" id="nombre-evento" placeholder="Nombre del Evento" required />
-      <input type="date" id="fecha-evento" required />
-      <input type="text" id="hora-evento" placeholder="Hora" required />
-      <input type="text" id="lugar-evento" placeholder="Lugar" required />
-      <button type="submit">Agregar Evento</button>
+      <label for="nombre-evento">Nombre del Evento:</label>
+      <input type="text" id="nombre-evento" name="nombre" required>
+      
+      <label for="lugar-evento">Lugar:</label>
+      <input type="text" id="lugar-evento" name="lugar" required>
+      
+      <label for="fecha-evento">Fecha:</label>
+      <input type="date" id="fecha-evento" name="fecha" required>
+      
+      <label for="hora-evento">Hora:</label>
+      <input type="time" id="hora-evento" name="hora" required>
+      
+      <label for="descripcion-evento">Descripción:</label>
+      <textarea id="descripcion-evento" name="descripcion" required></textarea>
+      
+      <button type="submit">Guardar Evento</button>
     </form>
+    
     <table id="eventos-tabla">
       <thead>
         <tr>
@@ -177,6 +191,7 @@
           <th>Fecha</th>
           <th>Hora</th>
           <th>Lugar</th>
+          <th>Descripción</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -185,50 +200,79 @@
   </section>
 
   <!-- Mensajes -->
-  <section id="mensajes-section">
+  <section id="seccion-mensajes">
     <h2>Mensajes</h2>
     <form id="mensaje-form">
-      <input type="text" id="de-mensaje" placeholder="De" required />
-      <input type="text" id="para-mensaje" placeholder="Para" required />
-      <input type="text" id="contenido-mensaje" placeholder="Contenido" required />
-      <input type="date" id="fecha-mensaje" required />
-      <button type="submit">Enviar Mensaje</button>
+      <input type="text" id="remitente" placeholder="Remitente" required>
+      <input type="text" id="receptor" placeholder="Receptor" required>
+      <textarea id="mensaje" placeholder="Mensaje" required></textarea>
+      <input type="datetime-local" id="fecha" required>
+      <button type="submit">Guardar Mensaje</button>
     </form>
+  
     <table id="mensajes-tabla">
       <thead>
         <tr>
-          <th>De</th>
-          <th>Para</th>
-          <th>Contenido</th>
+          <th>Remitente</th>
+          <th>Receptor</th>
+          <th>Mensaje</th>
           <th>Fecha</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
   </section>
+  
 
   <!-- Reportes -->
-  <section id="reportes-section">
-    <h2>Reportes de Mantenimiento</h2>
+  <section id="reportes">
+    <h2>Gestión de Reportes</h2>
+  
     <form id="reporte-form">
-      <input type="text" id="apartamento-reporte" placeholder="Apto" required />
-      <input type="text" id="descripcion-reporte" placeholder="Descripción" required />
-      <input type="date" id="fecha-reporte" required />
-      <button type="submit">Agregar Reporte</button>
+      <div>
+        <label for="descripcion-reporte">Descripción:</label>
+        <input type="text" id="descripcion-reporte" placeholder="Descripción del problema" required />
+      </div>
+  
+      <div>
+        <label for="fecha-reporte">Fecha:</label>
+        <input type="date" id="fecha-reporte" />
+      </div>
+  
+      <div>
+        <label for="estado-reporte">Estado:</label>
+        <select id="estado-reporte">
+          <option value="pendiente">Pendiente</option>
+          <option value="resuelto">Resuelto</option>
+        </select>
+      </div>
+  
+      <div>
+        <label for="responsable-reporte">Responsable:</label>
+        <input type="text" id="responsable-reporte" placeholder="Nombre del responsable" />
+      </div>
+  
+      <button type="submit">Guardar Reporte</button>
     </form>
+  
+    <h3>Lista de Reportes</h3>
     <table id="reportes-tabla">
       <thead>
         <tr>
-          <th>Apartamento</th>
           <th>Descripción</th>
           <th>Fecha</th>
+          <th>Estado</th>
+          <th>Responsable</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
   </section>
+  
 
+  <!-- Carga JS principal -->
   <script type="module" src="js/main.js"></script>
-  <script src="js/apartamentos.js"></script>
 </body>
 </html>

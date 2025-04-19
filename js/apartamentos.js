@@ -1,114 +1,176 @@
-const API_URL = 'http://localhost:5000/api/apartamentos';
+export function initApartamentos() {
+  const API_URL = 'http://localhost:5000/api/apartamentos';
+  let editandoId = null;
 
-// Funcionalidad para agregar nuevos residentes al formulario
-document.getElementById('add-residente').addEventListener('click', function () {
-  const container = document.getElementById('residentes-container');
-  const newResidentForm = document.createElement('div');
-  newResidentForm.classList.add('resident-form');
-  newResidentForm.innerHTML = `
-    <label for="residente-nombre">Nombre del Residente:</label>
-    <input type="text" name="residente-nombre[]" required>
-    <label for="residente-tipoDocumento">Tipo de Documento:</label>
-    <input type="text" name="residente-tipoDocumento[]" required>
-    <label for="residente-documento">Documento:</label>
-    <input type="text" name="residente-documento[]" required>
-    <label for="residente-telefono">Teléfono:</label>
-    <input type="text" name="residente-telefono[]" required>
-  `;
-  container.appendChild(newResidentForm);
-});
+  // Evento para agregar nuevos residentes
+  document.getElementById('add-residente').addEventListener('click', () => {
+    agregarCampoResidente();
+  });
 
-// Función para enviar los datos del formulario al backend
-document.getElementById('apartamento-form').addEventListener('submit', async function (e) {
-  e.preventDefault();
+  // Manejo del formulario de apartamentos
+  document.getElementById('apartamento-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-  const formData = new FormData(this);
-  const data = {
-    numero: formData.get('numero'),
-    piso: formData.get('piso'),
-    propietario: {
-      nombre: formData.get('propietario-nombre'),
-      tipoDocumento: formData.get('propietario-tipoDocumento'),
-      documento: formData.get('propietario-documento'),
-      telefono: formData.get('propietario-telefono')
-    },
-    residentes: []
-  };
+    const numero = document.getElementById('numero').value;
+    const piso = document.getElementById('piso').value;
+    const propietarioNombre = document.getElementById('propietario-nombre').value;
+    const propietarioTipoDocumento = document.getElementById('propietario-tipoDocumento').value;
+    const propietarioDocumento = document.getElementById('propietario-documento').value;
+    const propietarioTelefono = document.getElementById('propietario-telefono').value;
 
-  const nombres = formData.getAll('residente-nombre[]');
-  const tipos = formData.getAll('residente-tipoDocumento[]');
-  const documentos = formData.getAll('residente-documento[]');
-  const telefonos = formData.getAll('residente-telefono[]');
+    const residentes = Array.from(document.querySelectorAll('.resident-form')).map(form => ({
+      nombre: form.querySelector('input[name="residente-nombre[]"]').value,
+      tipoDocumento: form.querySelector('input[name="residente-tipoDocumento[]"]').value,
+      documento: form.querySelector('input[name="residente-documento[]"]').value,
+      telefono: form.querySelector('input[name="residente-telefono[]"]').value,
+    }));
 
-  for (let i = 0; i < nombres.length; i++) {
-    data.residentes.push({
-      nombre: nombres[i],
-      tipoDocumento: tipos[i],
-      documento: documentos[i],
-      telefono: telefonos[i]
-    });
+    const apartamentoData = {
+      numero,
+      piso,
+      propietario: {
+        nombre: propietarioNombre,
+        tipoDocumento: propietarioTipoDocumento,
+        documento: propietarioDocumento,
+        telefono: propietarioTelefono
+      },
+      residentes
+    };
+
+    try {
+      if (editandoId) {
+        await actualizarApartamento(editandoId, apartamentoData);
+        editandoId = null;
+      } else {
+        await crearApartamento(apartamentoData);
+      }
+
+      // Reset form y campo de residentes
+      document.getElementById('apartamento-form').reset();
+      document.getElementById('residentes-container').innerHTML = '';
+      agregarCampoResidente(); // Un campo vacío
+      mostrarApartamentos();
+    } catch (error) {
+      console.error('Error al guardar apartamento:', error);
+    }
+  });
+
+  // Carga y muestra los apartamentos en la tabla
+  async function mostrarApartamentos() {
+    try {
+      const response = await fetch(API_URL);
+      const apartamentos = await response.json();
+      const tablaBody = document.getElementById('tablaApartamentos').querySelector('tbody');
+      tablaBody.innerHTML = '';
+
+      apartamentos.forEach(apto => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${apto.numero}</td>
+          <td>${apto.piso}</td>
+          <td>${apto.propietario?.nombre || 'Sin propietario'}</td>
+          <td>${apto.propietario?.tipoDocumento || '-'}</td>
+          <td>${apto.propietario?.documento || '-'}</td>
+          <td>${apto.propietario?.telefono || '-'}</td>
+          <td>${Array.isArray(apto.residentes) ? apto.residentes.map(r => r.nombre).join(', ') : ''}</td>
+          <td>
+            <button class="editar-btn" data-id="${apto._id}">Editar</button>
+            <button class="eliminar-btn" data-id="${apto._id}">Eliminar</button>
+          </td>
+        `;
+        tablaBody.appendChild(row);
+      });
+
+      // Delegar eventos
+      tablaBody.querySelectorAll('.editar-btn').forEach(btn =>
+        btn.addEventListener('click', () => editarApartamento(btn.dataset.id))
+      );
+      tablaBody.querySelectorAll('.eliminar-btn').forEach(btn =>
+        btn.addEventListener('click', () => eliminarApartamento(btn.dataset.id))
+      );
+
+    } catch (error) {
+      console.error('Error al mostrar apartamentos:', error);
+    }
   }
 
-  try {
-    const response = await fetch(API_URL, {
+  // Funciones CRUD
+  async function crearApartamento(data) {
+    const res = await fetch(API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
-
-    const result = await response.json();
-
-    if (response.ok) {
-      alert('Apartamento registrado exitosamente');
-      this.reset();
-      document.getElementById('residentes-container').innerHTML = '';
-      cargarApartamentos(); // recargar la tabla al registrar
-    } else {
-      alert(`Error: ${result.mensaje}`);
-    }
-  } catch (error) {
-    console.error('Error al enviar datos:', error);
-    alert('Ocurrió un error al registrar el apartamento');
+    return res.json();
   }
-});
 
-// Función para cargar y mostrar todos los apartamentos
-async function cargarApartamentos() {
-  try {
-    const res = await fetch(API_URL);
-    const apartamentos = await res.json();
-    const tabla = document.querySelector('#tablaApartamentos tbody');
-    tabla.innerHTML = '';
-
-    apartamentos.forEach(apto => {
-      const fila = document.createElement('tr');
-
-      // Propietario
-      const propietario = `${apto.propietario?.nombre || ''} (${apto.propietario?.tipoDocumento || ''} ${apto.propietario?.documento || ''})`;
-
-      // Residentes
-      const residentes = apto.residentes.map(r =>
-        `${r.nombre} (${r.tipoDocumento} ${r.documento})`
-      ).join('<br>');
-
-      fila.innerHTML = `
-        <td>${apto.numero}</td>
-        <td>${apto.piso}</td>
-        <td>${propietario}</td>
-        <td>${residentes}</td>
-      `;
-
-      tabla.appendChild(fila);
+  async function actualizarApartamento(id, data) {
+    const res = await fetch(`${API_URL}/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     });
-
-  } catch (error) {
-    console.error('Error al cargar apartamentos:', error);
+    return res.json();
   }
-}
 
-// Cargar apartamentos al iniciar
-document.addEventListener('DOMContentLoaded', () => {
-  cargarApartamentos();
-});
+  async function eliminarApartamento(id) {
+    if (!confirm('¿Eliminar este apartamento?')) return;
+    try {
+      const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      await res.json();
+      mostrarApartamentos();
+    } catch (error) {
+      console.error('Error al eliminar apartamento:', error);
+    }
+  }
+
+  // Edición
+  async function editarApartamento(id) {
+    try {
+      const res = await fetch(`${API_URL}/${id}`);
+      const apto = await res.json();
+
+      // Uso de fallback si no existe propietario
+      const prop = apto.propietario || {};
+      document.getElementById('numero').value = apto.numero || '';
+      document.getElementById('piso').value = apto.piso || '';
+      document.getElementById('propietario-nombre').value = prop.nombre || '';
+      document.getElementById('propietario-tipoDocumento').value = prop.tipoDocumento || '';
+      document.getElementById('propietario-documento').value = prop.documento || '';
+      document.getElementById('propietario-telefono').value = prop.telefono || '';
+
+      // Rellenar residentes
+      const cont = document.getElementById('residentes-container');
+      cont.innerHTML = '';
+      (Array.isArray(apto.residentes) ? apto.residentes : []).forEach(r =>
+        agregarCampoResidente(r)
+      );
+
+      editandoId = id;
+    } catch (error) {
+      console.error('Error al cargar apartamento para editar:', error);
+    }
+  }
+
+  // Crea un campo de residente (vacío o con datos)
+  function agregarCampoResidente(res = {}) {
+    const cont = document.getElementById('residentes-container');
+    const div = document.createElement('div');
+    div.classList.add('resident-form');
+    div.innerHTML = `
+      <label>Nombre:</label>
+      <input type="text" name="residente-nombre[]" value="${res.nombre || ''}" required>
+      <label>Tipo Doc:</label>
+      <input type="text" name="residente-tipoDocumento[]" value="${res.tipoDocumento || ''}" required>
+      <label>Documento:</label>
+      <input type="text" name="residente-documento[]" value="${res.documento || ''}" required>
+      <label>Teléfono:</label>
+      <input type="text" name="residente-telefono[]" value="${res.telefono || ''}" required>
+    `;
+    cont.appendChild(div);
+  }
+
+  // Inicialización
+  agregarCampoResidente();
+  mostrarApartamentos();
+}
